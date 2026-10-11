@@ -1,0 +1,9 @@
+{
+  "name": "Nandhini AI - Anime Best Friend",
+  "short_name": "Nandhini AI",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#090714",
+  "theme_color": "#100b22",
+  "description": "A friendly anime-style AI companion demo."
+}

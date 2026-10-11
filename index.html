@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#100b22">
+<meta name="description" content="Nandhini — your friendly anime-style AI companion demo">
+<link rel="manifest" href="manifest.json">
+<title>Nandhini AI 💜</title>
+<style>
+:root{--bg:#090714;--panel:#151128;--panel2:#20183c;--pink:#f28bff;--purple:#8b5cf6;--text:#f8f4ff;--muted:#bdb4d4}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#2a1550 0,#100b22 48%,#080711 100%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+.app{max-width:760px;margin:auto;min-height:100vh;display:flex;flex-direction:column;padding:16px 14px calc(18px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;gap:12px;padding:7px 3px 16px}.avatar{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid var(--pink);box-shadow:0 0 20px #a855f755}
+h1{font-size:22px;margin:0}.subtitle{font-size:12px;color:var(--muted)}.online{margin-left:auto;color:#b6ffcc;font-size:12px}
+.hero{border:1px solid #8b5cf655;background:linear-gradient(145deg,#251742dd,#130f25f5);border-radius:25px;padding:18px 16px;text-align:center;box-shadow:0 15px 40px #0005}
+.hero img{width:118px;height:118px;object-fit:cover;border-radius:50%;border:3px solid #d58cff;box-shadow:0 0 28px #b75cff66}
+.hero h2{margin:10px 0 2px;font-size:24px}.hero p{margin:0;color:#d6b6f6;font-size:14px}.status{font-size:12px;color:#c6b8e8;margin:12px 0 2px}
+.pulse{display:inline-flex;gap:4px;align-items:center;height:24px}.pulse i{display:block;width:4px;border-radius:5px;background:var(--pink);height:7px;animation:wave .8s infinite ease-in-out}.pulse i:nth-child(2){animation-delay:.1s}.pulse i:nth-child(3){animation-delay:.2s}.pulse i:nth-child(4){animation-delay:.3s}.pulse i:nth-child(5){animation-delay:.4s}@keyframes wave{50%{height:22px}}
+.actions{display:flex;gap:10px;justify-content:center;margin:15px 0 0}.btn{border:1px solid #b68bff66;border-radius:15px;padding:12px 15px;background:#261845;color:white;font-weight:650;cursor:pointer}.btn.primary{background:linear-gradient(100deg,#7442df,#c54dd8);border:0;min-width:145px}.btn:active{transform:scale(.98)}
+.section-title{font-size:14px;color:#dfc5ff;margin:18px 3px 9px}.chat{flex:1;min-height:190px;max-height:37vh;overflow:auto;padding:10px 2px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:86%;padding:12px 14px;border-radius:18px;font-size:14px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}.msg.nandhini{align-self:flex-start;background:#211b36;border:1px solid #5d477c66;border-bottom-left-radius:5px}.msg.you{align-self:flex-end;background:linear-gradient(135deg,#6940c8,#983fbd);border-bottom-right-radius:5px}
+.composer{display:flex;gap:8px;background:#171229;border:1px solid #5f4a8266;border-radius:19px;padding:7px;margin-top:7px}.composer input{min-width:0;flex:1;background:transparent;border:0;outline:none;color:white;padding:8px;font-size:14px}.iconbtn{width:43px;height:43px;border-radius:14px;border:0;background:#322052;color:white;font-size:19px;cursor:pointer}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}.feature{background:#171229cc;border:1px solid #624a8166;border-radius:15px;padding:12px 7px;text-align:center;font-size:12px;color:#e8dfff}.feature b{display:block;font-size:21px;margin-bottom:5px}.notice{font-size:11px;color:#9e94b8;line-height:1.45;text-align:center;margin:14px 6px 0}.settings{display:flex;gap:9px;align-items:center;margin-top:10px}.settings label{font-size:12px;color:var(--muted)}select{background:#211835;color:#fff;border:1px solid #5d477c;border-radius:10px;padding:8px;max-width:66%}
+@media(min-width:600px){.app{padding-top:24px}.hero{padding:22px}.chat{max-height:420px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+<img class="avatar" src="icons/nandhini-avatar.png" alt="Nandhini avatar">
+<div><h1>Nandhini 💜</h1><div class="subtitle">Your anime-style AI best friend</div></div>
+<div class="online">● Ready</div>
+</header>
+<section class="hero">
+<img src="icons/nandhini-avatar.png" alt="Anime avatar of Nandhini">
+<h2>Hi, I'm Nandhini 🌸</h2>
+<p>Pesalama? I'm here to chat with you.</p>
+<div class="status" id="status">Tap the mic and say hello!</div>
+<div class="pulse" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+<div class="actions"><button class="btn primary" id="voiceBtn">🎙️ Talk to me</button><button class="btn" id="stopBtn">■ Stop voice</button></div>
+</section>
+<div class="section-title">💬 Chat with Nandhini</div>
+<div class="chat" id="chat" aria-live="polite">
+<div class="msg nandhini">Hey! I'm Nandhini 🌸 Enna pannitu irukka? You can type to me or try voice chat. 💜</div>
+</div>
+<form class="composer" id="form"><input id="input" autocomplete="off" placeholder="Message Nandhini..." aria-label="Message"><button class="iconbtn" type="submit" aria-label="Send">➤</button><button class="iconbtn" id="micSmall" type="button" aria-label="Speak">🎙️</button></form>
+<div class="settings"><label for="voiceSelect">Voice</label><select id="voiceSelect"><option value="">Default available female voice</option></select><label for="langSelect">Language</label><select id="langSelect"><option value="ta-IN" selected>Tamil</option><option value="en-IN">English (India)</option><option value="en-US">English (US)</option></select></div>
+<div class="features"><div class="feature"><b>🎙️</b>Voice chat</div><div class="feature"><b>💗</b>Friendly replies</div><div class="feature"><b>📚</b>Study help</div></div>
+<p class="notice">Tamil is selected by default. Voice quality and available female voices depend on your Android/browser. OFFLINE MODE: Replies are generated locally from built-in rules. No server, login, API key, or internet connection is used. Voice output depends on Tamil voices already installed on your phone. Voice input may still require Android/browser offline speech support; typing always works offline. Your chats stay on this device and are not sent to a server.</p>
+</div>
+<script>
+const chat=document.getElementById('chat'), input=document.getElementById('input'), statusEl=document.getElementById('status');
+const langSelect=document.getElementById('langSelect'), voiceSelect=document.getElementById('voiceSelect');
+function addMsg(text,who){const d=document.createElement('div');d.className='msg '+who;d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d}
+function getReply(text){
+ const t=text.toLowerCase().trim();
+ if(/^(hi|hello|hey|வணக்கம்|ஹாய்|ஹலோ)/i.test(t)) return 'ஹாய்! 💜 நான் நந்தினி. எப்படி இருக்கிறாய்? இன்று என்ன நடந்தது?';
+ if(/உன் பேர்|உன்னோட பேர்|யார் நீ|who are you|your name/.test(t)) return 'என் பெயர் நந்தினி 🌸 நான் உன் போனிலேயே இயங்கும் ஆஃப்லைன் உரையாடல் உதவியாளர். எனக்கு இணையம் தேவையில்லை; ஆனால் என் பதில்கள் முன்பே அமைக்கப்பட்ட உள்ளூர் பதில்கள்.';
+ if(/எப்படி இருக்க|how are you/.test(t)) return 'நான் நல்லா இருக்கேன் ப்ரோ! 💜 நீ எப்படி இருக்க?';
+ if(/நன்றி|thanks|thank you/.test(t)) return 'பரவாயில்லை! 😊 உனக்கு உதவ நான் இங்கே இருக்கேன்.';
+ if(/சோக|கவலை|கஷ்டம்|தனிமை|sad|lonely|upset/.test(t)) return 'அய்யோ 💜 என்ன நடந்தது என்று மெதுவாகச் சொல்லு. நான் கேட்கத் தயாராக இருக்கேன். முடியுமானால் நம்பிக்கையான ஒருவரிடமும் பேசு.';
+ if(/படிக்க|படிப்பு|கல்லூரி|தேர்வு|exam|study|college/.test(t)) return 'சரி! 📚 எந்த பாடம் அல்லது கேள்வி என்று சொல்லு. தெரிந்த அளவில் படிப்படியாக உதவுகிறேன்.';
+ if(/காதல்|love|crush/.test(t)) return 'காதல் உணர்வுகள் சில நேரம் குழப்பமாக இருக்கும் 🌸 என்ன நடந்தது என்று சொல்லு; குறை சொல்லாமல் பேசலாம்.';
+ if(/ஜோக்|சிரிக்க|joke|funny/.test(t)) return 'ஒரு சின்ன ஜோக் 😄 மொபைல் ஏன் கண்ணாடி போட்டது? Contacts தொலைந்துடுச்சாம்!';
+ if(/சாப்பிட்ட|சாப்பாடு|eat|food/.test(t)) return 'சாப்பிட்டாயா ப்ரோ? 😊 உடம்பைப் பார்த்துக்கோ; நேரத்துக்கு சாப்பிட மறந்துடாதே.';
+ if(/நேரம்|time/.test(t)) return 'சரியான நேரத்தை உன் மொபைல் கடிகாரத்தில் பார்க்கலாம் ⏰';
+ if(/உதவி|help/.test(t)) return 'நிச்சயமாக உதவ முயற்சி செய்கிறேன் 💜 படிப்பு, தினசரி விஷயம், அல்லது மனதில் இருப்பதைத் தட்டச்சு செய்.';
+ if(/bye|போறேன்|பை/.test(t)) return 'சரி, பிறகு பேசலாம்! 💜 கவனமாக இரு.';
+ return 'நான் ஆஃப்லைனில் இயங்குவதால் எல்லா கேள்விகளுக்கும் புதிய பதில் உருவாக்க முடியாது ப்ரோ. 💜 “படிப்பு”, “கவலை”, “காதல்”, “ஜோக்”, அல்லது “உதவி” என்று கேட்டு பாரு.';
+}
+function speak(text){if(!('speechSynthesis'in window)){statusEl.textContent='Speech output is not supported in this browser.';return}
+ speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=langSelect.value;
+ const voices=speechSynthesis.getVoices();const selected=voiceSelect.value;let v=voices.find(x=>x.name===selected);
+ if(!v){const lang=langSelect.value.split('-')[0];v=voices.find(x=>x.lang.toLowerCase().startsWith(lang)&&/female|woman|zira|samantha|google.*female|tamil.*female/i.test(x.name))||voices.find(x=>x.lang.toLowerCase().startsWith(lang))}
+ if(v)u.voice=v;u.rate=.94;u.pitch=1.12;u.onstart=()=>statusEl.textContent='Nandhini is speaking…';u.onend=()=>statusEl.textContent='Your turn 🌸';u.onerror=()=>statusEl.textContent='Voice unavailable—try another browser voice.';speechSynthesis.speak(u)}
+function refreshVoices(){if(!('speechSynthesis'in window))return;const voices=speechSynthesis.getVoices();const previous=voiceSelect.value;voiceSelect.innerHTML='<option value="">Auto-select voice</option>';voices.forEach(v=>{const o=document.createElement('option');o.value=v.name;o.textContent=v.name+' ('+v.lang+')';voiceSelect.appendChild(o)});if(previous)voiceSelect.value=previous}
+if('speechSynthesis'in window){refreshVoices();speechSynthesis.onvoiceschanged=refreshVoices}
+function send(text){text=text.trim();if(!text)return;addMsg(text,'you');input.value='';const reply=getReply(text);setTimeout(()=>{addMsg(reply,'nandhini');speak(reply)},350)}
+document.getElementById('form').addEventListener('submit',e=>{e.preventDefault();send(input.value)});
+function listen(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){statusEl.textContent='Voice input may not be supported in this browser. Try Chrome and type instead.';return}
+ const rec=new SR();rec.lang=langSelect.value;rec.interimResults=false;rec.maxAlternatives=1;statusEl.textContent='Listening… speak now 🎙️';rec.onresult=e=>{input.value=e.results[0][0].transcript;send(input.value)};rec.onerror=e=>{statusEl.textContent='Mic issue: '+e.error+'. Check microphone permission.'};rec.onend=()=>{if(statusEl.textContent==='Listening… speak now 🎙️')statusEl.textContent='Tap the mic and say hello!'};try{rec.start()}catch(e){statusEl.textContent='Please wait a moment and try again.'}}
+document.getElementById('voiceBtn').addEventListener('click',listen);document.getElementById('micSmall').addEventListener('click',listen);
+document.getElementById('stopBtn').addEventListener('click',()=>{if('speechSynthesis'in window)speechSynthesis.cancel();statusEl.textContent='Voice stopped.'});
+if('serviceWorker'in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+if(!navigator.onLine)statusEl.textContent='Offline mode — local replies are ready 💜';
+window.addEventListener('offline',()=>statusEl.textContent='You are offline — local chat still works 💜');
+window.addEventListener('online',()=>statusEl.textContent='Local offline chat is ready 💜');
+</script>
+</body></html>
